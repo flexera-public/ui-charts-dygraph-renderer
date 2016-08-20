@@ -1,9 +1,11 @@
-@import '../node_modules/designkit-global/src/designkit-global';
-@import '../node_modules/designkit-typography/src/designkit-typography';
-@import '../node_modules/designkit-colors/src/designkit-colors';
-@import "../node_modules/designkit-layout/src/scss/designkit-layout";
-
-@import '../styles.scss';
+@import
+  "../node_modules/bourbon/app/assets/stylesheets/bourbon",
+  "../node_modules/designkit-typography/src/designkit-typography",
+  "../node_modules/designkit-colors/src/designkit-colors",
+  "../node_modules/designkit-layout/src/scss/designkit-layout",
+  "../node_modules/designkit-utilities/src/designkit-utilities",
+  "../styles.scss"
+;
 
 html, body {
   width: 100%;
@@ -23,7 +25,7 @@ body > ui-view {
 
 .layout-header {
   height: 50px;
-  background: $blue;
+  background: $header-flat;
   color: #fff;
   display: flex;
   align-items: center;
@@ -37,7 +39,14 @@ body > ui-view {
 .layout-sidebar {
   background: $left-background-dark;
   color: #fff;
-  padding: 30px;
+  padding: 30px 0;
+  width: 220px;
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
 
   li {
     border-left: solid 3px transparent;
@@ -76,4 +85,22 @@ rs-chart {
 
 [layout-margin] > * {
   margin: 8px;
+}
+
+// ui chart legend
+.dygraph-legend {
+  font-weight: bold;
+  color: $text;
+  .highlight {
+    font-size: 3rem;
+    font-weight: normal;
+  }
+}
+
+.dygraph-axis-label.dygraph-axis-label-x,
+.dygraph-axis-label.dygraph-axis-label-y {
+  font-family: $helvetica;
+  font-size: 10px;
+  font-weight: bold;
+  color: rgb(118, 137, 154);
 }

@@ -39,13 +39,21 @@ export class DygraphsRenderer {
     'full': {
       drawGrid: true,
       legend: 'always',
+      labelsDiv: 'chartLegend',
+      gridLineColor: '#d3d8de',
+      gridLinePattern: [4,4],
+      hideOverlayOnMouseOut: false,
+      labelsDivWidth: 100,
+      labelsSeparateLines: true,
       axes: {
         x: {
-          drawAxis: true
+          drawAxis: true,
+          axisLineColor: '#c2c8d1'
         },
         y: {
-          drawAxis: true
-        }
+          drawAxis: true,
+          axisLineColor: '#c2c8d1'
+        },
       }
     }
   }
