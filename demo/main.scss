@@ -78,17 +78,40 @@ body > ui-view {
   padding: 20px;
 }
 
-rs-chart {
-  display: block;
-  position: relative;
-}
-
 [layout-margin] > * {
   margin: 8px;
 }
 
-// ui chart legend
+// chart layout
+rs-chart {
+  position: relative;
+  display: block;
+}
+
+rs-dygraphs-renderer {
+  height: 350px;
+  box-sizing: border-box;
+  padding: 15px;
+  border: 1px solid #fff;
+  .chart {
+    position: relative;
+    float: left;
+    width: 80%;
+    height: 300px;
+    box-sizing: border-box;
+  }
+  .chart-legend {
+    float: right;
+    width: 20%;
+    height: 300px;
+    box-sizing: border-box;
+    padding: 0 16px;
+  }
+}
+
+// chart legend
 .dygraph-legend {
+  font-family: $helvetica;
   font-weight: bold;
   color: $text;
   .highlight {

@@ -122,6 +122,6 @@ export class DygraphsRenderer {
 
   private buildGraph() {
     // console.log(this.element.find('div'))
-    return new Dygraph(this.element.find('div')[0], this.graphData, _.defaults({ labels: this.graphLabels }, this.presets[this.preset], this.defaultOptions))
+    return new Dygraph(this.element.find("div")[0], this.graphData, _.defaults({ labels: this.graphLabels }, this.presets[this.preset], this.defaultOptions))
   }
 }

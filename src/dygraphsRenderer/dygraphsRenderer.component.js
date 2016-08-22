@@ -99,7 +99,7 @@ export let DygraphsRenderer = class DygraphsRenderer {
         return a;
     }
     buildGraph() {
-        return new Dygraph(this.element.find('div')[0], this.graphData, _.defaults({ labels: this.graphLabels }, this.presets[this.preset], this.defaultOptions));
+        return new Dygraph(this.element.find("div")[0], this.graphData, _.defaults({ labels: this.graphLabels }, this.presets[this.preset], this.defaultOptions));
     }
 };
 DygraphsRenderer = __decorate([
