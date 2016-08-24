@@ -1,11 +1,11 @@
 {
   "name": "@rightscale/ui-charts-dygraph-renderer",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "description": "Render charts using Dygraphs",
   "main": "index.js",
   "dependencies": {
     "@rightscale/ui-angular-decorators": "^0.0.2",
-    "@rightscale/ui-charts": "^0.0.3",
+    "@rightscale/ui-charts": "0.0.4",
     "lodash": "^4.15.0"
   },
   "devDependencies": {
