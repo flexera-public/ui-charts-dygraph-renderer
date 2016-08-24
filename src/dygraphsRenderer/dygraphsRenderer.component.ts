@@ -26,7 +26,7 @@ export class DygraphsRenderer {
   private presets: _.Dictionary<DygraphOptions> = {
     'minimal': {
       drawGrid: false,
-      legend: 'follow',
+      legend: 'never',
       axes: {
         x: {
           drawAxis: false
