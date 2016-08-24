@@ -31,7 +31,7 @@
     "gulp-watch": "^4.3.9",
     "jasmine-core": "^2.4.1",
     "karma": "^1.1.2",
-    "karma-chrome-launcher": "^1.0.1",
+    "karma-chrome-launcher": "^2.0.0",
     "karma-jasmine": "^1.0.2",
     "karma-mocha-reporter": "^2.1.0",
     "karma-phantomjs-launcher": "^1.0.1",
@@ -39,7 +39,7 @@
     "rollup-plugin-babel": "^2.6.1",
     "rollup-plugin-commonjs": "^3.3.1",
     "rollup-plugin-node-resolve": "^2.0.0",
-    "rollup-plugin-typescript": "^0.7.7",
+    "rollup-plugin-typescript": "^0.8.1",
     "rollup-watch": "^2.5.0",
     "typescript": "^2.0.0"
   },

@@ -10,8 +10,7 @@ import '../../lib/dygraph'
   },
   bindings: {
     preset: '=?'
-  },
-  templateUrl: 'rs.dygraphsRenderer/dygraphsRenderer/dygraphsRenderer.html'
+  }
 })
 @lib.inject(['$element', '$scope'])
 export class DygraphsRenderer {
@@ -66,7 +65,6 @@ export class DygraphsRenderer {
     }, true)
 
     scope.$watch(() => this.preset, preset => {
-      console.log('preset: ', preset)
       if (this.dygraph && preset) {
         if (!this.presets[preset]) throw `Uknown Dygraphs renderer preset: [${preset}]`
         this.dygraph = this.buildGraph()
