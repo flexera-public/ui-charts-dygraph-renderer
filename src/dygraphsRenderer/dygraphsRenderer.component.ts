@@ -9,7 +9,7 @@ import '../../lib/dygraph'
     chart: '^rsChart'
   },
   bindings: {
-    preset: '=?'
+    preset: '<?'
   }
 })
 @lib.inject(['$element', '$scope'])
@@ -52,7 +52,7 @@ export class DygraphsRenderer {
   private graphData: DygraphData
   private graphLabels: string[]
 
-  preset = 'minimal'
+  preset: string
   chart: Charts.Chart.ChartComponent
 
   constructor(
