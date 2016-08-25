@@ -13,13 +13,14 @@ import '../../lib/dygraph'
   }
 })
 @lib.inject(['$element', '$scope'])
-export class DygraphsRenderer {
+export class DygraphsRenderer implements ng.IComponentController {
   private dygraph: Dygraph
+
+  private colorTable = ['#4FBBCD', '#7355A6', '#C45887', '#F7A626', '#B4CB55', '#D05A5A', '#5DD08B', '#3C8CC7']
 
   private defaultOptions: DygraphOptions = {
     connectSeparatedPoints: true,
-    customBars: true,
-    colors: ['#4FBBCD', '#7355A6', '#C45887', '#F7A626', '#B4CB55', '#D05A5A', '#5DD08B', '#3C8CC7']
+    customBars: true
   }
 
   private presets: _.Dictionary<DygraphOptions> = {
@@ -72,6 +73,10 @@ export class DygraphsRenderer {
     })
   }
 
+  $onDestroy() {
+    this.dygraph.destroy();
+  }
+
   private updateData(metricsData: Charts.Chart.MetricDetails[]) {
     var temp: _.Dictionary<DygraphPoint> = {}
     var labels = ['time']
@@ -95,8 +100,8 @@ export class DygraphsRenderer {
     if (!this.dygraph) {
       this.dygraph = this.buildGraph()
     }
-    else {
-      this.dygraph.updateOptions(_.defaults({ file: this.graphData, labels: labels }, this.presets[this.preset]))
+    else if (this.graphData && this.graphData.length) {
+      this.dygraph.updateOptions(_.defaults({ file: this.graphData, labels: labels, colors: this.graphColors() }, this.presets[this.preset]))
     }
   }
 
@@ -110,7 +115,16 @@ export class DygraphsRenderer {
     return a;
   }
 
+  private graphColors() {
+    return this.chart.options.metricIds.map(id => this.colorTable[id % this.colorTable.length]);
+  }
+
   private buildGraph() {
-    return new Dygraph(this.element[0], this.graphData, _.defaults({ labels: this.graphLabels }, this.presets[this.preset], this.defaultOptions))
+    if (!this.graphData || !this.graphData.length) return
+    if (this.dygraph) {
+      this.dygraph.destroy();
+      this.dygraph = null;
+    }
+    return new Dygraph(this.element[0], this.graphData, _.defaults({ labels: this.graphLabels, colors: this.graphColors() }, this.presets[this.preset], this.defaultOptions))
   }
 }
