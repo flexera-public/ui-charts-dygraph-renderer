@@ -1,7 +1,7 @@
-import ngModule from '@rightscale/ui-angular-decorators'
+import ngModule from '@rightscale/ui-angular-decorators';
 
-var app = new ngModule('demoApp', ['rs.dygraphsRenderer', 'ui.router'])
-export default app
+let app = new ngModule('demoApp', ['rs.dygraphsRenderer', 'ui.router']);
+export default app;
 
 app.config(['$provide'], (
   $provide: ng.auto.IProvideService,
@@ -14,4 +14,4 @@ app.config(['$provide'], (
       });
     };
   });
-})
+});

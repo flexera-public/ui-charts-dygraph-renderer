@@ -1,1 +1,1 @@
-import './dygraphsRenderer/dygraphsRenderer.component'
+import './dygraphsRenderer/dygraphsRenderer.component';

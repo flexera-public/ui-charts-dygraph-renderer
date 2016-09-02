@@ -1,6 +1,6 @@
-import app from './app'
-import LayoutController from './layout/layout.controller'
-import {DygraphsController} from './dygraphs/dygraphs.controller'
+import app from './app';
+import LayoutController from './layout/layout.controller';
+import {DygraphsController} from './dygraphs/dygraphs.controller';
 
 app.config(['$stateProvider', '$urlRouterProvider'], (
   $stateProvider: ng.ui.IStateProvider,
@@ -30,5 +30,5 @@ app.config(['$stateProvider', '$urlRouterProvider'], (
       data: {
         label: 'Dygraphs Renderer'
       }
-    })
+    });
 });

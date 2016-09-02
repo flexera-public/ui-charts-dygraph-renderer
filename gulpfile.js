@@ -120,6 +120,19 @@ gulp.task('clean', cb => {
   del(['build/**/*', '.tmp/**/*'], cb);
 });
 
+gulp.task('lint', () => {
+  var tslint = require('gulp-tslint');
+
+  return gulp.src(['src/**/*.ts', 'demo/**/*.ts'])
+    .pipe(tslint({
+      formattersDirectory: 'node_modules/custom-tslint-formatters/formatters',
+      formatter: 'grouped'
+    }))
+    .pipe(tslint.report({
+      summarizeFailureOutput: true
+    }));
+});
+
 /**********************************************************************
  * Tasks to build and run the demo
  */
@@ -196,7 +209,7 @@ gulp.task('spec:compile', ['spec:inject'], () => {
   return compile('.tmp/spec.ts', '.tmp/spec.js');
 })
 
-gulp.task('spec', ['demo:build', 'spec:compile'], (cb) => {
+gulp.task('spec', ['lint', 'demo:build', 'spec:compile'], (cb) => {
   var path = require('path');
   new karma.Server(
     { configFile: path.resolve('karma.conf.js') },
