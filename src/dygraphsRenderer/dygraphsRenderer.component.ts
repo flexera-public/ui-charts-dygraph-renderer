@@ -74,14 +74,9 @@ export class DygraphsRenderer implements ng.IComponentController {
 
   constructor(
     private element: JQuery,
-    scope: ng.IScope
+    private scope: ng.IScope
   ) {
-    // TODO: add a callback to the chart for better performance
-    scope.$watch(() => this.chart.details, details => {
-      if (details) {
-        this.updateData(details);
-      }
-    }, true);
+    scope.$watch(() => this.chart.lastUpdate, () => this.updateData(this.chart.details));
 
     scope.$watch(() => this.preset, preset => {
       if (this.dygraph && preset) {
@@ -99,7 +94,16 @@ export class DygraphsRenderer implements ng.IComponentController {
     }
   }
 
-  private updateData(metricsData: Charts.Chart.MetricDetails[]) {
+  private onZoom = (minDate: any, maxDate: any, yRanges: any) => {
+    this.scope.$apply(() => {
+      this.chart.options.paused = this.dygraph.isZoomed();
+    });
+  }
+
+  private updateData = (metricsData: Charts.Chart.MetricDetails[]) => {
+    if (!metricsData || this.chart.options.paused) {
+      return;
+    }
     let metricGroups = this.groupMetrics(metricsData);
     let refresh = _.isEqual(metricGroups, this.metricGroups);
     this.metricGroups = metricGroups;
@@ -222,6 +226,8 @@ export class DygraphsRenderer implements ng.IComponentController {
     }
 
     _.defaultsDeep(options, this.presets[this.preset], this.defaultOptions);
+
+    options.zoomCallback = this.onZoom;
 
     if (!this.dygraph) {
       this.dygraph = new Dygraph(this.element[0], this.graphData, options);

@@ -255,7 +255,7 @@ interface Dygraph {
   getValue(row: number, col: number): number;
   indexFromSetName(name: string): number;
   isSeriesLocked(): boolean;
-  isZoomed(axis?: string): void;
+  isZoomed(axis?: string): boolean;
   numAxes(): number;
   numColumns(): number;
   numRows(): number;

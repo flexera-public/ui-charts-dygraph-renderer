@@ -176,7 +176,7 @@ gulp.task('demo:build', ['demo:compile', 'demo:styles'], () => {
 gulp.task('demo', ['demo:build'], () => {
   var bs = browserSync.create();
 
-  watch(['src/**/*', 'demo/**/*'], () => {
+  watch(['src/**/*', 'demo/**/*', 'node_modules/@rightscale/', '!node_modules/@rightscale/**/node_modules'], () => {
     gulp.start('demo:build');
   });
 
