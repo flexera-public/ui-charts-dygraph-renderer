@@ -13,7 +13,7 @@ interface MetricGroup {
   metrics: string[];
 }
 
-@lib.component('rsDygraphsRenderer', {
+@lib.inject('$element', '$scope').component({
   require: {
     chart: '^rsChart'
   },
@@ -21,11 +21,10 @@ interface MetricGroup {
     preset: '<?'
   }
 })
-@lib.inject(['$element', '$scope'])
 export class DygraphsRenderer implements ng.IComponentController {
 
   preset: string;
-  chart: Charts.Chart.ChartComponent;
+  chart: Charts.Chart.Chart;
 
   private dygraph: Dygraph;
 

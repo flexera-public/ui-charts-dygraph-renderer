@@ -2,8 +2,7 @@ import app from '../app';
 import Charts from '@rightscale/ui-charts';
 import _ from 'lodash';
 
-@app.controller
-@app.inject([Charts.Data.GraphData])
+@app.inject(Charts.Data.GraphData).controller
 export class DygraphsController {
   // Arbitrary list of time spans
   timeSpans = {

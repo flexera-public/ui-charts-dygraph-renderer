@@ -4,7 +4,7 @@
   "description": "Render charts using Dygraphs",
   "main": "index.js",
   "dependencies": {
-    "@rightscale/ui-angular-decorators": "^0.0.2",
+    "@rightscale/ui-angular-decorators": "^1.0.0",
     "@rightscale/ui-charts": "0.0.4",
     "lodash": "^4.15.0",
     "numeral": "^1.5.3"
@@ -51,5 +51,13 @@
     "test": "gulp spec"
   },
   "author": "RightScale, André Rieussec",
-  "license": "MIT"
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rightscale/ui-charts-dygraph-renderer/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rightscale/ui-charts-dygraph-renderer"
+  },
+  "homepage": "https://github.com/rightscale/ui-charts-dygraph-renderer"
 }
