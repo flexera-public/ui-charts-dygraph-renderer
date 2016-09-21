@@ -41,11 +41,12 @@ export class DygraphsRenderer implements ng.IComponentController {
       legend: 'never',
       axes: {
         x: {
-          drawAxis: false
+          drawAxis: true,
+          axisLineColor: '#c2c8d1',
         },
         y: {
-          drawAxis: false
-        }
+          drawAxis: false,
+        },
       }
     },
     'full': {
