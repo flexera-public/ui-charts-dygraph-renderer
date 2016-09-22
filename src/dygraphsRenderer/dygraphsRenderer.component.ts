@@ -10,6 +10,7 @@ interface MetricGroup {
     min: number,
     max: number
   };
+  axisLabel: string;
   metrics: string[];
 }
 
@@ -72,6 +73,7 @@ export class DygraphsRenderer implements ng.IComponentController {
 
   private graphData: DygraphData;
   private graphLabels: string[];
+  private graphColors: string[];
   private metricGroups: MetricGroup[];
 
   constructor(
@@ -86,6 +88,15 @@ export class DygraphsRenderer implements ng.IComponentController {
           throw `Uknown Dygraphs renderer preset: [${preset}]`;
         }
         this.ensureGraph(true);
+      }
+    });
+
+    scope.$watch(() => this.chart.options.paused, paused => {
+      if (!paused && this.dygraph && this.dygraph.isZoomed()) {
+        // When the chart is unpaused while zoomed in, then zoom out.
+        // The timeout is used to ensure we're out of a digest loop because
+        // resetZoom() will call onZoom() which runs scope.$apply()
+        setTimeout(() => this.dygraph.resetZoom());
       }
     });
   }
@@ -123,10 +134,19 @@ export class DygraphsRenderer implements ng.IComponentController {
   private convertData(metricsData: Charts.Chart.MetricDetails[]) {
     let temp: _.Dictionary<DygraphPoint> = {};
     let labels = ['time'];
+    this.graphColors = [];
     let seriesCount = metricsData.map(m => _.keys(m.points).length).reduce((t, v) => t + v);
-    metricsData.forEach((m) => {
-      _.forEach(m.points, (v, k) => {
-        labels.push(`${m.name} - ${k}`);
+    _(metricsData).sortBy(m => m.id).forEach(m => {
+
+      if (!this.graphColors.length) {
+        // Picks the graph colors using the metric id in order to stay somewhat deterministic
+        this.graphColors = this.colorTable.slice(m.id % this.colorTable.length)
+          .concat(this.colorTable.slice(0, m.id % this.colorTable.length));
+      }
+
+      _(m.points).keys().sort().forEach(k => {
+        let v = m.points[k];
+        labels.push(k);
         if (typeof v[0].data !== 'number') {
           v.forEach(p => {
             let dp = temp[p.timestamp] || this.makeArray(p.timestamp, seriesCount);
@@ -158,6 +178,7 @@ export class DygraphsRenderer implements ng.IComponentController {
         groups.push({
           range: m.axisRange,
           format: m.format,
+          axisLabel: m.axisLabel,
           metrics: _(m.points).keys().map(k => `${m.providerName} - ${m.name} - ${k}`).value()
         });
       }
@@ -192,16 +213,6 @@ export class DygraphsRenderer implements ng.IComponentController {
   }
 
   /**
-   * Builds a deterministic color table based on the metric ids
-   *
-   * @private
-   * @returns a color table
-   */
-  private graphColors() {
-    return this.graphLabels.slice(1).map(l => this.colorTable[this.hash(l) % this.colorTable.length]);
-  }
-
-  /**
    * Ensures the graph exists with the correct options
    *
    * @private
@@ -214,7 +225,7 @@ export class DygraphsRenderer implements ng.IComponentController {
 
     let options: DygraphOptions = {
       labels: this.graphLabels,
-      colors: this.graphColors()
+      colors: this.graphColors
     };
 
     if (this.dygraph && rebuild) {
@@ -223,8 +234,15 @@ export class DygraphsRenderer implements ng.IComponentController {
     }
 
     _.merge(options, this.axisOptions(this.metricGroups[0], 'y'));
+    if (this.preset === 'full') {
+      options.ylabel = this.metricGroups[0].axisLabel;
+    }
+
     if (this.metricGroups.length > 1) {
       _.merge(options, this.axisOptions(this.metricGroups[1], 'y2'));
+      if (this.preset === 'full') {
+        options.y2label = this.metricGroups[1].axisLabel;
+      }
     }
 
     _.defaultsDeep(options, this.presets[this.preset], this.defaultOptions);
@@ -262,16 +280,5 @@ export class DygraphsRenderer implements ng.IComponentController {
     }
 
     return options;
-  }
-
-  private hash(str: string) {
-    let hash = 5381;
-    let i = str.length;
-
-    while (i) {
-      hash = (hash * 33) ^ str.charCodeAt(--i);
-    }
-
-    return hash >>> 0;
   }
 }
