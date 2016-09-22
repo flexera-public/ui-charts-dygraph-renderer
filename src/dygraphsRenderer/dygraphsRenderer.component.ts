@@ -46,6 +46,7 @@ export class DygraphsRenderer implements ng.IComponentController {
         },
         y: {
           drawAxis: false,
+          includeZero: true
         },
       }
     },
@@ -62,7 +63,8 @@ export class DygraphsRenderer implements ng.IComponentController {
         },
         y: {
           drawAxis: true,
-          axisLineColor: '#c2c8d1'
+          axisLineColor: '#c2c8d1',
+          includeZero: true
         }
       }
     }
@@ -124,7 +126,7 @@ export class DygraphsRenderer implements ng.IComponentController {
     let seriesCount = metricsData.map(m => _.keys(m.points).length).reduce((t, v) => t + v);
     metricsData.forEach((m) => {
       _.forEach(m.points, (v, k) => {
-        labels.push(`${m.providerName} - ${m.name} - ${k}`);
+        labels.push(`${m.name} - ${k}`);
         if (typeof v[0].data !== 'number') {
           v.forEach(p => {
             let dp = temp[p.timestamp] || this.makeArray(p.timestamp, seriesCount);
@@ -196,7 +198,7 @@ export class DygraphsRenderer implements ng.IComponentController {
    * @returns a color table
    */
   private graphColors() {
-    return this.chart.options.metricIds.map(id => this.colorTable[id % this.colorTable.length]);
+    return this.graphLabels.slice(1).map(l => this.colorTable[this.hash(l) % this.colorTable.length]);
   }
 
   /**
@@ -245,7 +247,9 @@ export class DygraphsRenderer implements ng.IComponentController {
 
     if (group.format || group.range) {
       options.axes = {};
-      options.axes[axis] = {};
+      options.axes[axis] = {
+        includeZero: true
+      };
     }
 
     if (group.format) {
@@ -258,5 +262,16 @@ export class DygraphsRenderer implements ng.IComponentController {
     }
 
     return options;
+  }
+
+  private hash(str: string) {
+    let hash = 5381;
+    let i = str.length;
+
+    while (i) {
+      hash = (hash * 33) ^ str.charCodeAt(--i);
+    }
+
+    return hash >>> 0;
   }
 }
