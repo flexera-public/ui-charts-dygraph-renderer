@@ -263,15 +263,31 @@ export class DygraphsRenderer implements ng.IComponentController {
     options.series = {};
     group.metrics.forEach(m => options.series[m] = { axis: axis });
 
-    if (group.format || group.range) {
-      options.axes = {};
-      options.axes[axis] = {
-        includeZero: true
-      };
-    }
+    options.axes = {};
+    options.axes[axis] = {
+      includeZero: true
+    };
+
+    options.axes[axis].valueFormatter = function (
+      num: number,
+      opts: any,
+      seriesName: string,
+      dygraph: Dygraph,
+      row: number,
+      col: number
+    ) {
+      let format = group.format || '0.00';
+      let val: number[] | number = <any>dygraph.getValue(row, col);
+      if (typeof val === 'Array') {
+        return `min: ${numeral(val[0]).format(format)}, avg: ${numeral(val[1]).format(format)}, max: ${numeral(val[2]).format(format)}`;
+      }
+      else {
+        return numeral(val).format(format);
+      }
+    };
 
     if (group.format) {
-      options.axes[axis].valueFormatter = (v: number) => numeral(v).format(group.format);
+      // options.axes[axis].valueFormatter = (v: number) => 'yo'; // numeral(v).format(group.format);
       options.axes[axis].axisLabelFormatter = (v: number) => numeral(v).format(group.format);
     }
 

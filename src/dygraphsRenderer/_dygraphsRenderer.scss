@@ -6,4 +6,10 @@ rs-dygraphs-renderer {
   display: block;
   overflow: hidden;
   position: absolute;
+
+  .dygraph-legend {
+    > span {
+      display: block;
+    }
+  }
 }

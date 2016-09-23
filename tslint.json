@@ -16,6 +16,7 @@
     "interface-name": [true, "never-prefix"],
     "variable-name": [true, "ban-keywords", "check-format", "allow-leading-underscore"],
     "no-empty": false,
-    "no-bitwise": false
+    "no-bitwise": false,
+    "max-line-length": false
   }
 }
