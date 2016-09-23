@@ -278,11 +278,11 @@ export class DygraphsRenderer implements ng.IComponentController {
     ) {
       let format = group.format || '0.00';
       let val: number[] | number = <any>dygraph.getValue(row, col);
-      if (typeof val === 'Array') {
-        return `min: ${numeral(val[0]).format(format)}, avg: ${numeral(val[1]).format(format)}, max: ${numeral(val[2]).format(format)}`;
+      if (typeof val === 'number') {
+        return numeral(val).format(format);
       }
       else {
-        return numeral(val).format(format);
+        return `min: ${numeral(val[0]).format(format)}, avg: ${numeral(val[1]).format(format)}, max: ${numeral(val[2]).format(format)}`;
       }
     };
 
