@@ -54,6 +54,7 @@ export class DygraphsRenderer implements ng.IComponentController {
     'full': {
       drawGrid: true,
       legend: 'always',
+      labelsDivWidth: 350,
       gridLineColor: '#d3d8de',
       gridLinePattern: [4, 4],
       labelsDivStyles: { 'textAlign': 'right' },
