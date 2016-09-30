@@ -31,13 +31,10 @@ export class DygraphsRenderer implements ng.IComponentController {
 
   private colorTable = ['#4FBBCD', '#7355A6', '#C45887', '#F7A626', '#B4CB55', '#D05A5A', '#5DD08B', '#3C8CC7'];
 
-  private defaultOptions: DygraphOptions = {
-    connectSeparatedPoints: true,
-    customBars: true
-  };
-
   private presets: _.Dictionary<DygraphOptions> = {
     'minimal': {
+      connectSeparatedPoints: true,
+      customBars: true,
       drawGrid: false,
       legend: 'never',
       axes: {
@@ -49,9 +46,12 @@ export class DygraphsRenderer implements ng.IComponentController {
           drawAxis: false,
           includeZero: true
         },
-      }
+      },
+      interactionModel: {}
     },
     'full': {
+      connectSeparatedPoints: true,
+      customBars: true,
       drawGrid: true,
       legend: 'always',
       labelsDivWidth: 350,
@@ -246,7 +246,7 @@ export class DygraphsRenderer implements ng.IComponentController {
       }
     }
 
-    _.defaultsDeep(options, this.presets[this.preset], this.defaultOptions);
+    _.defaultsDeep(options, this.presets[this.preset]);
 
     options.zoomCallback = this.onZoom;
 
