@@ -1,0 +1,14 @@
+<div class="graph-header" ng-if="$ctrl.preset == 'full'"
+     layout layout-margin layout-align="space-between center">
+  <div flex ng-if="!$ctrl.zoomed()">
+    Click and drag to zoom, Shift+Click and drag to pan.
+  </div>
+  <div flex ng-if="$ctrl.zoomed()">
+    Updates are paused while zooming and panning.
+  </div>
+  <button class="btn btn-default" type="button" ng-if="$ctrl.zoomed()"
+          ng-click="$ctrl.zoomOut()">
+    Reset
+  </button>
+</div>
+<graph flex></graph>

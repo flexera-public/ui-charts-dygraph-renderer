@@ -14,7 +14,13 @@ interface MetricGroup {
   metrics: string[];
 }
 
+interface Range {
+  from?: number;
+  span?: number;
+}
+
 @lib.inject('$element', '$scope').component({
+  templateUrl: 'rs.dygraphsRenderer/dygraphsRenderer/dygraphsRenderer.html',
   require: {
     chart: '^rsChart'
   },
@@ -77,6 +83,11 @@ export class DygraphsRenderer implements ng.IComponentController {
   private graphColors: string[];
   private metricGroups: MetricGroup[];
 
+  private updateRange: (from: number, span: number) => void;
+
+  private defaultRange: Range = {};
+  private previousRange: Range = {};
+
   constructor(
     private element: JQuery,
     private scope: ng.IScope
@@ -92,6 +103,13 @@ export class DygraphsRenderer implements ng.IComponentController {
       }
     });
 
+    scope.$watch(() => this.chart.options.from, val => this.defaultRange.from = val);
+    scope.$watch(() => this.chart.options.span, val => this.defaultRange.span = val);
+    scope.$watch(() => this.defaultRange, val => {
+      this.previousRange.from = this.defaultRange.from;
+      this.previousRange.span = this.defaultRange.span;
+    }, true);
+
     scope.$watch(() => this.chart.options.paused, paused => {
       if (!paused && this.dygraph && this.dygraph.isZoomed()) {
         // When the chart is unpaused while zoomed in, then zoom out.
@@ -100,6 +118,13 @@ export class DygraphsRenderer implements ng.IComponentController {
         setTimeout(() => this.dygraph.resetZoom());
       }
     });
+
+    this.updateRange = _.debounce((from: number, span: number) => {
+      this.scope.$apply(() => {
+        this.chart.options.paused = true;
+        this.chart.forceRefresh(from, span);
+      });
+    }, 500);
   }
 
   $onDestroy() {
@@ -108,14 +133,38 @@ export class DygraphsRenderer implements ng.IComponentController {
     }
   }
 
-  private onZoom = (minDate: any, maxDate: any, yRanges: any) => {
-    this.scope.$apply(() => {
-      this.chart.options.paused = this.dygraph.isZoomed();
-    });
+  zoomOut() {
+    // Unpause the chart updates
+    this.chart.options.paused = false;
+
+    // Set the original range
+    this.chart.options.from = this.defaultRange.from;
+    this.chart.options.span = this.defaultRange.span;
+
+    this.previousRange = {};
+  }
+
+  zoomed() {
+    return !!this.previousRange.from;
+  }
+
+  private onDraw = (dygraph: Dygraph) => {
+    let range = dygraph.xAxisRange();
+    let from = Math.floor(range[0]);
+    let span = Math.floor(range[1] - range[0]);
+    if (from !== (<any>this.graphData)[0][0].valueOf() &&
+        (from !== this.previousRange.from || span !== this.previousRange.span)) {
+      this.previousRange = {
+        from: from,
+        span: span
+      };
+
+      this.updateRange(from, span);
+    }
   }
 
   private updateData = (metricsData: Charts.Chart.MetricDetails[]) => {
-    if (!metricsData || this.chart.options.paused) {
+    if (!metricsData) {
       return;
     }
     let metricGroups = this.groupMetrics(metricsData);
@@ -147,6 +196,10 @@ export class DygraphsRenderer implements ng.IComponentController {
 
       _(m.points).keys().sort().forEach(k => {
         let v = m.points[k];
+        if (!v || !v.length) {
+          return;
+        }
+
         labels.push(k);
         if (typeof v[0].data !== 'number') {
           v.forEach(p => {
@@ -248,10 +301,10 @@ export class DygraphsRenderer implements ng.IComponentController {
 
     _.defaultsDeep(options, this.presets[this.preset]);
 
-    options.zoomCallback = this.onZoom;
+    options.drawCallback = this.onDraw;
 
     if (!this.dygraph) {
-      this.dygraph = new Dygraph(this.element[0], this.graphData, options);
+      this.dygraph = new Dygraph(this.element.find('graph')[0], this.graphData, options);
     }
     else {
       this.dygraph.updateOptions(_.defaults({ file: this.graphData }, options));
@@ -288,7 +341,6 @@ export class DygraphsRenderer implements ng.IComponentController {
     };
 
     if (group.format) {
-      // options.axes[axis].valueFormatter = (v: number) => 'yo'; // numeral(v).format(group.format);
       options.axes[axis].axisLabelFormatter = (v: number) => numeral(v).format(group.format);
     }
 
