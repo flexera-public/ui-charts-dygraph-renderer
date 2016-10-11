@@ -153,7 +153,7 @@ export class DygraphsRenderer implements ng.IComponentController {
     let from = Math.floor(range[0]);
     let span = Math.floor(range[1] - range[0]);
     if (from !== (<any>this.graphData)[0][0].valueOf() &&
-        (from !== this.previousRange.from || span !== this.previousRange.span)) {
+      (from !== this.previousRange.from || span !== this.previousRange.span)) {
       this.previousRange = {
         from: from,
         span: span
@@ -190,8 +190,8 @@ export class DygraphsRenderer implements ng.IComponentController {
 
       if (!this.graphColors.length) {
         // Picks the graph colors using the metric id in order to stay somewhat deterministic
-        this.graphColors = this.colorTable.slice(m.id % this.colorTable.length)
-          .concat(this.colorTable.slice(0, m.id % this.colorTable.length));
+        this.graphColors = this.colorTable.slice(this.hash(m.id) % this.colorTable.length)
+          .concat(this.colorTable.slice(0, this.hash(m.id) % this.colorTable.length));
       }
 
       _(m.points).keys().sort().forEach(k => {
@@ -349,5 +349,14 @@ export class DygraphsRenderer implements ng.IComponentController {
     }
 
     return options;
+  }
+
+  private hash(str: string) {
+    let hash = 5381;
+    for (let i = 0; i < str.length; i++) {
+      let char = str.charCodeAt(i);
+      hash = ((hash << 5) + hash) + char; /* hash * 33 + c */
+    }
+    return hash;
   }
 }
