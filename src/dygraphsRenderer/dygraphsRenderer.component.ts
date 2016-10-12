@@ -12,6 +12,7 @@ interface MetricGroup {
   };
   axisLabel: string;
   metrics: string[];
+  stack: boolean;
 }
 
 interface Range {
@@ -201,7 +202,14 @@ export class DygraphsRenderer implements ng.IComponentController {
         }
 
         labels.push(k);
-        if (typeof v[0].data !== 'number') {
+        if (metricsData.length === 1 && m.stack) {
+          v.forEach(p => {
+            let dp = temp[p.timestamp] || this.makeArray(p.timestamp, seriesCount);
+            dp[labels.length - 1] = (typeof p.data !== 'number') ? p.data.avg : p.data;
+            temp[p.timestamp] = dp;
+          });
+        }
+        else {
           v.forEach(p => {
             let dp = temp[p.timestamp] || this.makeArray(p.timestamp, seriesCount);
             dp[labels.length - 1] = (typeof p.data !== 'number') ?
@@ -233,6 +241,7 @@ export class DygraphsRenderer implements ng.IComponentController {
           range: m.axisRange,
           format: m.format,
           axisLabel: m.axisLabel,
+          stack: m.stack,
           metrics: _(m.points).keys().map(k => `${m.providerName} - ${m.name} - ${k}`).value()
         });
       }
@@ -302,6 +311,15 @@ export class DygraphsRenderer implements ng.IComponentController {
     _.defaultsDeep(options, this.presets[this.preset]);
 
     options.drawCallback = this.onDraw;
+
+    if (this.metricGroups.length === 1) {
+      options.stackedGraph = this.metricGroups[0].stack;
+      options.customBars = !this.metricGroups[0].stack;
+    }
+    else {
+      options.stackedGraph = false;
+      options.customBars = true;
+    }
 
     if (!this.dygraph) {
       this.dygraph = new Dygraph(this.element.find('graph')[0], this.graphData, options);
