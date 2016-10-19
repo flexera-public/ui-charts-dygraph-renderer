@@ -15,4 +15,8 @@
     Reset
   </button>
 </div>
+<!-- This is just a quick, visual way to verify audit entry data is getting passed in -->
+<div ng-repeat="audit in $ctrl.auditEntries">
+  <div>{{:: audit.summary}}</div>
+</div>
 <graph flex></graph>

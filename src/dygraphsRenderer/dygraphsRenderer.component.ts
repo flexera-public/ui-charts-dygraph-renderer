@@ -15,6 +15,12 @@ interface MetricGroup {
   stack: boolean;
 }
 
+interface Audit {
+  summary: string;
+  user_email: string;
+  updated_at: string;
+}
+
 interface Range {
   from?: number;
   span?: number;
@@ -26,13 +32,15 @@ interface Range {
     chart: '^rsChart'
   },
   bindings: {
-    preset: '<?'
+    preset: '<?',
+    auditEntries: '=' // consider '<', or however one-way binding works, if that's sufficent
   }
 })
 export class DygraphsRenderer implements ng.IComponentController {
 
   preset: string;
   chart: Charts.Chart.Chart;
+  auditEntries: Audit;
 
   private dygraph: Dygraph;
 
@@ -176,7 +184,7 @@ export class DygraphsRenderer implements ng.IComponentController {
   }
 
   /**
-   * Converts the data received into a format that's accepted by Dygraps. Also extracts
+   * Converts the data received into a format that's accepted by Dygraphs. Also extracts
    * the label information.
    *
    * @private
