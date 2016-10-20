@@ -18,4 +18,22 @@ rs-dygraphs-renderer {
       display: block;
     }
   }
+
+  .audit-line {
+    $line-thickness: 2px;
+    $flag-size: 13px;
+    position: absolute;
+    border-left: #0A83F6 $line-thickness dashed;
+    &:after {
+      position: absolute;
+      top: 0px;
+      left: -$line-thickness;
+      content: "";
+      display: block;
+      width: 0;
+      height: 0;
+      border-bottom: $flag-size solid #0A83F6;
+      border-right: $flag-size solid transparent;
+    }
+  }
 }

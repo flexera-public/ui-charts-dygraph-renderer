@@ -202,9 +202,9 @@ export class DygraphsRenderer implements ng.IComponentController {
       let a = dygraph.getArea();
       let x = (a.w * pct) + a.x;
       let newDiv = document.createElement('div');
-      newDiv.textContent = e.summary + ' ' + e.user_email + new Date().getTime();
+      newDiv.classList.add('audit-line');
       newDiv.style.left = x + 'px';
-      newDiv.style.position = 'absolute';
+      newDiv.style.height = a.h + 'px';
       
       this.auditDivs.push(newDiv);
       graphDiv.appendChild(newDiv);
