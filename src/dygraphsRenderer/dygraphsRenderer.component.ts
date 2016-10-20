@@ -18,7 +18,7 @@ interface MetricGroup {
 interface Audit {
   summary: string;
   user_email: string;
-  updated_at: string;
+  updated_at: Date;
 }
 
 interface Range {
@@ -33,14 +33,18 @@ interface Range {
   },
   bindings: {
     preset: '<?',
-    auditEntries: '=' // consider '<', or however one-way binding works, if that's sufficent
+    auditEntries: '<?'
   }
 })
 export class DygraphsRenderer implements ng.IComponentController {
 
   preset: string;
   chart: Charts.Chart.Chart;
-  auditEntries: Audit;
+
+  // audit entry information that should be displayed on the graph
+  auditEntries: Audit[] = [];
+  // the audit-related divs that are appended to the Dygraphs div
+  auditDivs: HTMLElement[] = [];
 
   private dygraph: Dygraph;
 
@@ -134,6 +138,13 @@ export class DygraphsRenderer implements ng.IComponentController {
         this.chart.forceRefresh(from, span);
       });
     }, 500);
+
+    // add some dummy audit entries
+    this.auditEntries.push(<Audit>{
+      summary: 'hi',
+      updated_at: new Date(Date.now() - 30000), // 30s in the past
+      user_email: 'bogus@example.com'
+    });
   }
 
   $onDestroy() {
@@ -158,6 +169,7 @@ export class DygraphsRenderer implements ng.IComponentController {
   }
 
   private onDraw = (dygraph: Dygraph) => {
+    this.rerenderAudits(dygraph);
     let range = dygraph.xAxisRange();
     let from = Math.floor(range[0]);
     let span = Math.floor(range[1] - range[0]);
@@ -170,6 +182,33 @@ export class DygraphsRenderer implements ng.IComponentController {
 
       this.updateRange(from, span);
     }
+  }
+
+  private rerenderAudits(dygraph: Dygraph) {
+    // delete old divs
+    _.each(this.auditDivs, div => div.remove());
+
+    // add new divs
+    let [minTS, maxTS] = dygraph.xAxisRange(); 
+    let graphDiv: HTMLElement = dygraph.graphDiv;
+    _.each(this.auditEntries, e => {
+      let ts = e.updated_at.getTime();
+      if (ts < minTS || ts > maxTS) {
+        return;
+      }
+
+      let pct = (ts - minTS) / (maxTS - minTS); 
+
+      let a = dygraph.getArea();
+      let x = (a.w * pct) + a.x;
+      let newDiv = document.createElement('div');
+      newDiv.textContent = e.summary + ' ' + e.user_email + new Date().getTime();
+      newDiv.style.left = x + 'px';
+      newDiv.style.position = 'absolute';
+      
+      this.auditDivs.push(newDiv);
+      graphDiv.appendChild(newDiv);
+    })
   }
 
   private updateData = (metricsData: Charts.Chart.MetricDetails[]) => {
