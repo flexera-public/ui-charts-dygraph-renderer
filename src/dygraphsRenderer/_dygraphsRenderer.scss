@@ -19,21 +19,65 @@ rs-dygraphs-renderer {
     }
   }
 
+  $cool-blue: #0A83F6;
+
   .audit-line {
     $line-thickness: 2px;
     $flag-size: 13px;
     position: absolute;
-    border-left: #0A83F6 $line-thickness dashed;
-    &:after {
-      position: absolute;
-      top: 0px;
-      left: -$line-thickness;
-      content: "";
-      display: block;
-      width: 0;
-      height: 0;
-      border-bottom: $flag-size solid #0A83F6;
-      border-right: $flag-size solid transparent;
-    }
+    border-left: $cool-blue $line-thickness dashed;
+    width: 0px;
+    // &:after {
+    //   position: absolute;
+    //   top: 0px;
+    //   left: -$line-thickness;
+    //   content: "";
+    //   display: block;
+    //   width: 0;
+    //   height: 0;
+    //   border-bottom: $flag-size solid $cool-blue;
+    //   border-right: $flag-size solid transparent;
+    // }
+  }
+
+  [data-tooltip] {
+    position: relative;
+  }
+
+  [data-tooltip]:before,
+  [data-tooltip]:after {
+    display: none;
+    position: absolute;
+    top: 0;
+  }
+
+  // [data-tooltip]:before {
+  //   border-bottom: .6em solid $cool-blue;
+  //   border-bottom: .6em solid rgba(0,153,255,0.8); // todo: make it a function of $cool-blue
+  //   border-left: 7px solid transparent;
+  //   border-right: 7px solid transparent;
+  //   content: "";
+  //   left: 20px;
+  //   margin-top: 1em;
+  // }
+
+  [data-tooltip]:after {
+    background-color: #0099ff;
+    background-color: rgba(0,153,255,0.8);
+    border: 4px solid #0099ff;
+    border: 4px solid rgba(0,153,255,0.8);
+    border-radius: 0px 7px 7px 0px;
+    color: #ffffff;
+    content: attr(data-tooltip-summary) "\A" attr(data-tooltip-email);
+    left: 0;
+    margin-top: 0em;
+    padding: 5px 15px;
+    white-space: pre-wrap;
+    font-size: 90%;
+  }
+
+  [data-tooltip]:hover:after,
+  [data-tooltip]:hover:before {
+    display: block;
   }
 }

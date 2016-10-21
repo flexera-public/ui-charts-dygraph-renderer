@@ -141,7 +141,7 @@ export class DygraphsRenderer implements ng.IComponentController {
 
     // add some dummy audit entries
     this.auditEntries.push(<Audit>{
-      summary: 'hi',
+      summary: 'Sample audit entry',
       updated_at: new Date(Date.now() - 30000), // 30s in the past
       user_email: 'bogus@example.com'
     });
@@ -189,7 +189,7 @@ export class DygraphsRenderer implements ng.IComponentController {
     _.each(this.auditDivs, div => div.remove());
 
     // add new divs
-    let [minTS, maxTS] = dygraph.xAxisRange(); 
+    let [minTS, maxTS] = dygraph.xAxisRange();
     let graphDiv: HTMLElement = dygraph.graphDiv;
     _.each(this.auditEntries, e => {
       let ts = e.updated_at.getTime();
@@ -197,7 +197,7 @@ export class DygraphsRenderer implements ng.IComponentController {
         return;
       }
 
-      let pct = (ts - minTS) / (maxTS - minTS); 
+      let pct = (ts - minTS) / (maxTS - minTS);
 
       let a = dygraph.getArea();
       let x = (a.w * pct) + a.x;
@@ -205,10 +205,13 @@ export class DygraphsRenderer implements ng.IComponentController {
       newDiv.classList.add('audit-line');
       newDiv.style.left = x + 'px';
       newDiv.style.height = a.h + 'px';
-      
+      newDiv.setAttribute('data-tooltip', '');
+      newDiv.setAttribute('data-tooltip-summary', e.summary);
+      newDiv.setAttribute('data-tooltip-email', e.user_email);
+
       this.auditDivs.push(newDiv);
       graphDiv.appendChild(newDiv);
-    })
+    });
   }
 
   private updateData = (metricsData: Charts.Chart.MetricDetails[]) => {
