@@ -42,7 +42,9 @@ export class DygraphsRenderer implements ng.IComponentController {
     'minimal': {
       connectSeparatedPoints: true,
       customBars: true,
-      drawGrid: false,
+      drawGrid: true,
+      gridLineColor: '#d3d8de',
+      gridLinePattern: [4, 4],
       legend: 'never',
       axes: {
         x: {
@@ -59,9 +61,9 @@ export class DygraphsRenderer implements ng.IComponentController {
     'full': {
       connectSeparatedPoints: true,
       customBars: true,
-      drawGrid: true,
       legend: 'always',
       labelsDivWidth: 350,
+      drawGrid: true,
       gridLineColor: '#d3d8de',
       gridLinePattern: [4, 4],
       labelsDivStyles: { 'textAlign': 'right' },
