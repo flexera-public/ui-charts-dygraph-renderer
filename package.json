@@ -6,7 +6,9 @@
   "dependencies": {
     "@rightscale/ui-angular-decorators": "^1.0.0",
     "@rightscale/ui-charts": "^0.1.1",
+    "@types/moment": "^2.13.0",
     "lodash": "^4.15.0",
+    "moment": "^2.15.2",
     "numeral": "^1.5.3"
   },
   "devDependencies": {
