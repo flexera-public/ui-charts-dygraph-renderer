@@ -5,7 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "@rightscale/ui-angular-decorators": "^1.0.0",
-    "@rightscale/ui-charts": "^0.1.1",
+    "@rightscale/ui-charts": "0.1.2",
     "lodash": "^4.15.0",
     "numeral": "^1.5.3"
   },
