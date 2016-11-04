@@ -1,18 +1,23 @@
-<div class="graph-header pv3" ng-if="$ctrl.preset == 'full'"
-     layout layout-align="space-between center">
-  <div ng-if="!$ctrl.zoomed()">
-    <div class="b-grey ba br1 center color-text dib highlight pa2 message message animate-zoom">
-      <div class="f6 sans message-text">Click and drag to zoom, Shift+Click and drag to pan.</div>
+<div ng-if="$ctrl.preset == 'full'">
+  <div class="message-base">
+    <div class="b-grey ba br1 center color-text dib highlight pa2 message-wrapper">
+      <div ng-if="!$ctrl.zoomed()">
+        <div class="message">
+          <div class="f6 sans message-text">Click and drag to zoom, Shift+Click and drag to pan.</div>
+        </div>
+      </div>
+      <div ng-if="$ctrl.zoomed()">
+        <div class="message">
+          <div class="f6 sans message-text">Updates are paused while zooming and panning.</div>
+        </div>
+      </div>
+      <button class="zoom-reset" type="button" ng-class="{ 'zoom-reset-enabled' : $ctrl.zoomed() }"
+              ng-click="$ctrl.zoomOut()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 15 17">
+          <path fill="#57626C" fill-rule="evenodd" d="M7.044 4.112V5.7c0 .462.336.65.736.42l1.135-.652c.4-.23 1.052-.61 1.45-.84l1.137-.653c.4-.23.4-.61 0-.84l-1.136-.653c-.4-.23-1.05-.61-1.45-.84L7.78 1.01c-.4-.23-.736-.063-.736.38v1.145-.347C3.134 2.356 0 5.594 0 9.548c0 4.058 3.3 7.36 7.36 7.36 4.058 0 7.36-3.302 7.36-7.36 0-1.346-.36-2.587-.99-3.68l-1.83 1.05c.464.78.716 1.683.716 2.63 0 2.9-2.355 5.256-5.257 5.256-2.902 0-5.257-2.355-5.257-5.257 0-2.796 2.186-5.088 4.94-5.256v-.178zm0-.894v.526-.526z"/>
+        </svg>
+      </button>
     </div>
   </div>
-  <div ng-if="$ctrl.zoomed()">
-    <div class="b-grey ba br1 center color-text dib highlight pa2 message animate-zoom">
-      <div class="f6 sans message-text">Updates are paused while zooming and panning.</div>
-    </div>
-  </div>
-  <button class="btn btn-default sans" type="button" ng-if="$ctrl.zoomed()" data-rs-id="reset-zoom"
-          ng-click="$ctrl.zoomOut()">
-    Reset
-  </button>
 </div>
 <graph flex></graph>
