@@ -145,18 +145,18 @@ export class DygraphsRenderer implements ng.IComponentController {
     this.chart.options.from = this.defaultRange.from;
     this.chart.options.span = this.defaultRange.span;
 
-    this.previousRange = {};
+    this.previousRange = _.clone(this.defaultRange);
   }
 
   zoomed() {
-    return !!this.previousRange.from;
+    return this.previousRange.from !== this.defaultRange.from;
   }
 
   private onDraw = (dygraph: Dygraph) => {
     let range = dygraph.xAxisRange();
-    let from = Math.floor(range[0]);
+    let from = Math.floor(range[1]);
     let span = Math.floor(range[1] - range[0]);
-    if (from !== (<any>this.graphData)[0][0].valueOf() &&
+    if (from !== _.last<any[]>(<any>this.graphData)[0].valueOf() &&
       (from !== this.previousRange.from || span !== this.previousRange.span)) {
       this.previousRange = {
         from: from,
@@ -189,7 +189,7 @@ export class DygraphsRenderer implements ng.IComponentController {
     let temp: _.Dictionary<DygraphPoint> = {};
     let labels = ['time'];
     this.graphColors = [];
-    let seriesCount = metricsData.map(m => _.keys(m.points).length).reduce((t, v) => t + v);
+    let seriesCount = _(metricsData).map(m => _.keys(m.points).length).reduce((t: number, v: number) => t + v);
     _(metricsData).sortBy(m => m.id).forEach(m => {
 
       if (!this.graphColors.length) {
