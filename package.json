@@ -5,8 +5,10 @@
   "main": "index.js",
   "dependencies": {
     "@rightscale/ui-angular-decorators": "^1.0.0",
+    "@types/moment": "^2.13.0",
     "@rightscale/ui-charts": "0.1.2",
     "lodash": "^4.15.0",
+    "moment": "^2.15.2",
     "numeral": "^1.5.3"
   },
   "devDependencies": {
@@ -38,9 +40,9 @@
     "karma-jasmine": "^1.0.2",
     "karma-mocha-reporter": "^2.1.0",
     "karma-phantomjs-launcher": "^1.0.1",
-    "rollup": "^0.34.1",
+    "rollup": "^0.36.3",
     "rollup-plugin-babel": "^2.6.1",
-    "rollup-plugin-commonjs": "^3.3.1",
+    "rollup-plugin-commonjs": "^5.0.5",
     "rollup-plugin-node-resolve": "^2.0.0",
     "rollup-plugin-typescript": "^0.8.1",
     "rollup-watch": "^2.5.0",

@@ -3,6 +3,7 @@ import Charts from '@rightscale/ui-charts';
 import _ from 'lodash';
 import '../../lib/dygraph';
 import 'numeral';
+import moment from 'moment';
 
 interface MetricGroup {
   format: string;
@@ -309,6 +310,10 @@ export class DygraphsRenderer implements ng.IComponentController {
         options.y2label = this.metricGroups[1].axisLabel;
       }
     }
+
+    options.axes.x = {
+      valueFormatter: (ms: number) => moment(ms).format('M/D/YYYY hh:mm:ss A')
+    };
 
     _.defaultsDeep(options, this.presets[this.preset]);
 
