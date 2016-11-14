@@ -152,6 +152,10 @@ export class DygraphsRenderer implements ng.IComponentController {
     return this.previousRange.from !== this.defaultRange.from;
   }
 
+  chartTitle() {
+    return this.chart.details[0].name;
+  }
+
   private onDraw = (dygraph: Dygraph) => {
     let range = dygraph.xAxisRange();
     let from = Math.floor(range[1]);
